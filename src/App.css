@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+.todoTable{
+  width: 70%;
+  text-align: center;
+  border: 1px solid black;
+
+}
+td, th {
+  border: 1px solid black;
+}
+th{
+  background-color: lightgray;
+}
