@@ -16,7 +16,6 @@ interface ITodoForm {
   selectedId: null | number;
 }
 
-// for transfering the form to react hook form we need to delete some part of the code and substite them with useform and related codes.
 const TodoForm: React.FC<ITodoForm> = (props) => {
   const { addTodo, setTodoItem, todoItem, selectedId } = props;
 
@@ -25,11 +24,11 @@ const TodoForm: React.FC<ITodoForm> = (props) => {
     handleSubmit,
     formState: { errors, isSubmitSuccessful, isDirty, isSubmitting },
     reset,
-    // watch,
+    watch,
   } = useForm({
     defaultValues: {
-      name: todoItem.name,
-      todo: todoItem.todo,
+      name: "",
+      todo: "",
     },
     mode: "onSubmit", // it is defualt and no need to type it, it triggers the validation on a specefic event, in this case onSubmit, but can be changed to other options such as onTouch, on blur and etc.
   });
@@ -48,7 +47,6 @@ const TodoForm: React.FC<ITodoForm> = (props) => {
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (e) => {
-    // e.preventDefault(); /* This prevents the webpage to be refreshed so that the current data is visible*/
     console.log("TodoValue On submit", todoItem); // we see the data at the moment of submitting not the new value which was set
     addTodo(todoItem, selectedId);
     setTodoItem({ name: "", todo: "" }); // This clears the value of the input field after the form is submitted.
@@ -62,46 +60,45 @@ const TodoForm: React.FC<ITodoForm> = (props) => {
       <label htmlFor="name">Your name:</label>
       <input
         {...register("name", {
-          required: "this is required",
-          minLength: 2,
+          required: "This field is required",
+          minLength: {
+            value: 2,
+            message: "Minimum length is 2 character",
+          },
           onChange,
         })}
-        // defaultValue={todoItem.name}
         placeholder="Enter Your Name"
         value={todoItem.name}
       />
-      {errors.name && <p>This field is required.</p>}
-      {/* <input
-        type="text"
-        name="name"
-        placeholder="Your Name"
-        onChange={handleChange}
-        value={todoItem.name}
-        required
-        minLength={2}
-      /> */}
+      {errors.name && <p>{errors.name?.message}</p>}
+
       <label htmlFor="todo"> Your task:</label>
       <input
         {...register("todo", {
-          required: true,
-          minLength: 2,
+          required: "This field is required",
+          minLength: {
+            value: 2,
+            message: "Minimum length is 2 character",
+          },
           onChange,
-          // disabled: watch("name")==="", // this disables the field unless the previous field is filled with data
+          // disabled: watch("name") === "", // this disables the field unless the previous field is filled with data
         })}
         value={todoItem.todo}
-        // defaultValue={todoItem.todo}
         placeholder="Your todo task"
       />
-      {errors.todo && (
-        <p>This field is required and the minimum length is 2 chars.</p>
-      )}
+      {errors.todo && <p>{errors.todo?.message}</p>}
 
       <button type="submit" disabled={!isDirty || isSubmitting}>
         {selectedId === null ? "Submit" : "Update"}
       </button>
-      {/* <button type="reset"> Reset</button>  this line still does not work */}
+      <button
+        type="button"
+        onClick={() => reset()}
+        disabled={watch("name") === "" && watch("todo") === ""}
+      >
+        Reset
+      </button>
     </form>
   );
 };
-
 export default TodoForm;
