@@ -15,29 +15,42 @@ const App: React.FC = () => {
   const [currentId, setCurrentId] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const addTodo = (todo: { name: string; todo: string }) => {
+  const createTodo = (todo: { name: string; todo: string }) => {
+    const newTodo: ITodo = {
+      todoId: currentId,
+      todoText: todo.todo,
+      todoName: todo.name,
+    };
+    setTodoList([...todoList, newTodo]);
+    setCurrentId(currentId + 1);
+  };
+
+  const editTodo = (
+    selectedId: number,
+    todo: { name: string; todo: string }
+  ) => {
+    const updatedTodoList = todoList.map((todoItem) =>
+      todoItem.todoId === selectedId
+        ? { ...todoItem, todoText: todo.todo, todoName: todo.name }
+        : todoItem
+    );
+    setTodoList(updatedTodoList);
+    setTodoItem({ name: "", todo: "" });
+    setSelectedId(null);
+  };
+
+  const addTodo = (
+    todo: { name: string; todo: string },
+    selectedId: number | null
+  ) => {
     if (selectedId !== null) {
       //Edithing an existing todo
-      const updatedTodoList = todoList.map((todoItem) =>
-        todoItem.todoId === selectedId
-          ? { ...todoItem, todoText: todo.todo, todoName: todo.name }
-          : todoItem
-      );
-      setTodoList(updatedTodoList);
-      setTodoItem({ name: "", todo: "" });
-      setSelectedId(null);
+      editTodo(selectedId, todo);
     } else {
       //adding a new todo
-      const newTodo: ITodo = {
-        todoId: currentId,
-        todoText: todo.todo,
-        todoName: todo.name,
-      };
-      setTodoList([...todoList, newTodo]);
-      setCurrentId(currentId + 1);
+      createTodo(todo);
     }
-  }
-
+  };
 
   const handleDelete = (todoId: number) => {
     const updatedTodoList = todoList.filter((todo) => todo.todoId !== todoId);

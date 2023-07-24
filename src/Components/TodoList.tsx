@@ -1,18 +1,16 @@
 import { ITodo } from "../App";
-// interface ITodo {
-//     id: number;
-//     text: string;
-// }
 
 interface ITodoList {
-    todoList: ITodo[];
-    handleDelete: (todoId: number) => void;
-    handleEdit: (todoId: number) => void;
+  todoList: ITodo[];
+  handleDelete: (todoId: number) => void;
+  handleEdit: (todoId: number) => void;
 }
 
-const TodoList: React.FC<ITodoList> = ({ todoList, handleDelete, handleEdit }) => {
-
-
+const TodoList: React.FC<ITodoList> = ({
+  todoList,
+  handleDelete,
+  handleEdit,
+}) => {
   return (
     <>
       <p>This is the list of your todos</p>
@@ -35,7 +33,6 @@ const TodoList: React.FC<ITodoList> = ({ todoList, handleDelete, handleEdit }) =
                 <button type="button" onClick={() => handleEdit(todoId)}>
                   Edit
                 </button>
-                {/*  this part is not yet activated*/}
                 <button type="button" onClick={() => handleDelete(todoId)}>
                   Delete
                 </button>
